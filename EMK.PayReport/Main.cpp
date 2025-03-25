@@ -10,7 +10,7 @@ struct Employee {
     float HourlyRate;
 };
 
-Employee GetEmployeeInfo(int &i) {
+Employee * GetEmployeeInfo(int i) {
     Employee *employee = new Employee;
     
     int employeeCount = i + 1;
@@ -29,16 +29,16 @@ Employee GetEmployeeInfo(int &i) {
     cout << "Enter the Hourly Rate for Employee " << employeeCount << ": ";
     cin >> employee->HourlyRate;
 
-    return *employee;
+    return employee;
 }
 
-void GetPayReport(Employee * employees, int &NUM_EMPLOYEES) {
+void GetPayReport(Employee ** employees, int &NUM_EMPLOYEES) {
     cout << "\nPay Report\n" << "----------\n";
     float totalPay = 0;
     for (int i = 0; i < NUM_EMPLOYEES; i++) {
-        float pay = (employees[i].HoursWorked * employees[i].HourlyRate);
+        float pay = (employees[i]->HoursWorked * employees[i]->HourlyRate);
         totalPay += pay;
-        cout << employees[i].ID << ". " << employees[i].FirstName << " " << employees[i].LastName << ": $" << (pay) << endl;
+        cout << employees[i]->ID << ". " << employees[i]->FirstName << " " << employees[i]->LastName << ": $" << (pay) << endl;
     }
     cout << "\nTotal Pay: $" << totalPay;
 }
@@ -48,14 +48,17 @@ int main() {
     int NUM_EMPLOYEES;
     cout << "Enter the number of employees: ";
     cin >> NUM_EMPLOYEES;
-    Employee * employees = new Employee[NUM_EMPLOYEES];
+    Employee ** employees = new Employee*[NUM_EMPLOYEES];
 
     for (int i = 0; i < NUM_EMPLOYEES; i++) {
-        Employee pEmployee = GetEmployeeInfo(i);
+        Employee *pEmployee = GetEmployeeInfo(i);
         employees[i] = pEmployee;
     }
     GetPayReport(employees, NUM_EMPLOYEES);
 
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        delete employees[i];
+    }
     delete[] employees;
 	(void)_getch();
 	return 0;
